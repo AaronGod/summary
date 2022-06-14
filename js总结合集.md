@@ -23,7 +23,7 @@
 
 3. webpack构建流程？
 
-      
+   ​    
 
 4. 权限验证
 
@@ -46,5 +46,28 @@
 
 6. vue中的书写易错点总结：
    1. vuex 中 设置命名空间属性为小写 namespaced: true
+
    2. store.commit('模块名/mutations名'，payload) 而不是 store.emit()
+
    3. 当使用父级hover控制子元素展开时，如果遇到父级包裹的情况，并且一定要使用到子级的opacity时 会出现放置在子元素也会触发父级hover的bug，所以需要使用`z-index`来控制；
+
+   4. 一些写法
+
+      ~~~vue
+      <script>
+          setup(){
+         	 const {stop} = fn(()=>{
+              stop()
+            })
+          
+             const { result, target } = useLoadData()
+             return { list: result, target}
+          }
+      </script>
+      ~~~
+
+7. 返回空对象
+
+   ~~~javascript
+   () => ({}) // 箭头函数返回空对象写法
+   ~~~
