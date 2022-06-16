@@ -1,5 +1,7 @@
 #### 1.布局总结
 
+- list 图文
+
 ![1654739828486](assets/1654739828486.png)
 
 ~~~html
@@ -119,4 +121,19 @@
   </script>
   ~~~
 
-  
+- list 图文2
+
+  ![1655346120768](assets/1655346120768.png)
+
+~~~vue
+<ul class="goods-list">
+        <li v-for="item in goods" :key="item.id">
+          <RouterLink :to="`/product/${item.id}`">
+            <img :src="item.picture" alt="">
+            <p class="name ellipsis">{{item.name}}</p>
+            <p class="price">&yen;{{item.price}}</p>
+          </RouterLink>
+        </li>
+      </ul>
+~~~
+

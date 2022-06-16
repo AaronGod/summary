@@ -57,11 +57,12 @@
       <script>
           setup(){
          	 const {stop} = fn(()=>{
+               // 返回的函数 通过解构 可在内部使用
               stop()
             })
           
              const { result, target } = useLoadData()
-             return { list: result, target}
+             return { list: result, target} // 返回重命名数据
           }
       </script>
       ~~~
@@ -71,3 +72,17 @@
    ~~~javascript
    () => ({}) // 箭头函数返回空对象写法
    ~~~
+
+8. vue中需要传入函数作为参数，而传入的函数也需要传入参数时-- 处理方法
+
+   ~~~vue
+    <script>
+   // 注意：useLazyData需要的是API函数，如果遇到要传参的情况，自己写函数再函数中调用API
+    const { target, result } = useLazyData(
+        () => findBrand(10)
+    )
+   </script>
+   ~~~
+
+   
+
