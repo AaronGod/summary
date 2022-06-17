@@ -159,5 +159,138 @@
     </div>
   ~~~
 
-  ​
+  ![65547751649](assets/1655477516494.png)
+
+~~~html
+<!-- 左右布局   ，左边固定一个高度  ，右边每个为左边二分之一 加上 中间间隔高度，
+右边每个li 设置一个margin-bottom  最后一排margin-bottom设置为0
+-->
+<style>
+ .goods-list {
+      width: 990px;
+      display: flex;
+      flex-wrap: wrap;
+      li {
+        width: 240px;
+        height: 300px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        &:nth-last-child(-n+4) {
+          margin-bottom: 0;
+        }
+        &:nth-child(4n) {
+          margin-right: 0;
+        }
+      }
+    }
+</style>
+~~~
+
+![65547964068](assets/1655479640683.png)
+
+~~~vue
+    <div class="special-list" ref="homeSpecial">
+      <div class="special-item" v-for="i in 3" :key="i">
+        <RouterLink to="/">
+          <img src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/topic_goods_1.jpg" alt />
+          <div class="meta">
+            <p class="title">
+              <span class="top ellipsis">看到撒娇的撒娇的凯撒就</span>
+              <span class="sub ellipsis">倒萨倒萨倒萨</span>
+            </p>
+            <span class="price">&yen;19.99起</span>
+          </div>
+        </RouterLink>
+        <div class="foot">
+          <span class="like"><i class="iconfont icon-hart1"></i>100</span>
+          <span class="view"><i class="iconfont icon-see"></i>100</span>
+          <span class="reply"><i class="iconfont icon-message"></i>100</span>
+        </div>
+      </div>
+    </div>
+<style scoped lang='less'>
+.special-list {
+  height: 380px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  .special-item {
+    width: 404px;
+    background: #fff;
+    .hoverShadow();
+    a {
+      display: block;
+      width: 100%;
+      height: 288px;
+      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+      .meta {
+        background-image: linear-gradient(to top,rgba(0, 0, 0, 0.8),transparent 50%);
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 288px;
+        .title {
+          position: absolute;
+          bottom: 0px;
+          left: 0;
+          padding-left: 16px;
+          width: 70%;
+          height: 70px;
+          .top {
+            color: #fff;
+            font-size: 22px;
+            display: block;
+          }
+          .sub {
+            display: block;
+            font-size: 19px;
+            color: #999;
+          }
+        }
+        .price {
+          position: absolute;
+          bottom: 25px;
+          right: 16px;
+          line-height: 1;
+          padding: 4px 8px 4px 7px;
+          color: @priceColor;
+          font-size: 17px;
+          background-color: #fff;
+          border-radius: 2px;
+        }
+      }
+    }
+    .foot {
+      height: 72px;
+      line-height: 72px;
+      padding: 0 20px;
+      font-size: 16px;
+
+      i {
+        display: inline-block;
+        width: 15px;
+        height: 14px;
+        margin-right: 5px;
+        color: #999;
+      }
+      .like,
+      .view {
+        float: left;
+        margin-right: 25px;
+        vertical-align: middle;
+      }
+      .reply {
+        float: right;
+        vertical-align: middle;
+      }
+    }
+  }
+}
+</style>
+~~~
 
