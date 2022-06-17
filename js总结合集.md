@@ -23,8 +23,6 @@
 
 3. webpack构建流程？
 
-      
-
 4. 权限验证
 
    - 登录权限验证： 部分页面需要登录才能访问
@@ -46,5 +44,40 @@
 
 6. vue中的书写易错点总结：
    1. vuex 中 设置命名空间属性为小写 namespaced: true
+
    2. store.commit('模块名/mutations名'，payload) 而不是 store.emit()
+
    3. 当使用父级hover控制子元素展开时，如果遇到父级包裹的情况，并且一定要使用到子级的opacity时 会出现放置在子元素也会触发父级hover的bug，所以需要使用`z-index`来控制；
+
+   4. 一些写法
+
+      ~~~vue
+      <script>
+      setup(){
+         const { stop } = fn(() => {
+            // 返回的函数 通过解构 可在内部使用
+            stop()
+         })
+      
+         const { result, target } = useLoadData()
+         return { list: result, target } // 返回重命名数据
+      }
+      </script>
+      ~~~
+
+7. 返回空对象
+
+   ~~~javascript
+   () => ({}) // 箭头函数返回空对象写法
+   ~~~
+
+8. vue中需要传入函数作为参数，而传入的函数也需要传入参数时-- 处理方法
+
+   ~~~vue
+    <script>
+   // 注意：useLazyData需要的是API函数，如果遇到要传参的情况，自己写函数再函数中调用API
+    const { target, result } = useLazyData(
+        () => findBrand(10)
+    )
+   </script>
+   ~~~
