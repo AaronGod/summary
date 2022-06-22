@@ -137,3 +137,6 @@
       </ul>
 ~~~
 
+- ul>li:last-child 和 ul>li:last-of-type 的区别？
+  1.  last-child 是先找到父元素 ， 找到所有的子元素中最后一个 ，判断是不是LI 是就选中，不是就无效选择器
+  2. last-of-type  先找到父元素, 找到所有的类型为LI的元素 ，选中最后一个 
