@@ -193,6 +193,149 @@
 
   https://blog.csdn.net/layxing27/article/details/108986484
 
-  
+- this 指向问题？
 
-  
+  1. this指向上一层调用者
+
+  2. 箭头函数没有this    指向外层
+
+  3. 例子
+
+     ~~~javascript
+     // this 指向
+     const j = {
+         name: 'j',
+         age: 10,
+         b: {
+             name: 'b',
+             age: 8,
+             fn: function(){
+                console.log(this.name)  // b
+             }
+         }
+     }
+     
+     // 箭头函数
+     var  id = 55 // 必须是var
+     function handle(){
+         setTimeout(()=>{
+             console.log(this.id)
+         },500)
+     }
+     handle({id:22})  // 55
+     
+     // 怎么才能打印22 ？使用 call  apply  bind
+     handle.call({id:22})
+     ~~~
+
+- call , apply bind区别？
+
+    >都改变this指向 bind不调用
+    >
+    >call(传this，参数1, 参数2，...)
+    >
+    >bind(传this，参数1, 参数2，...)
+    >
+    >call(传this, [参数1， 参数2, ...])
+
+- 闭包？
+
+  - AO 和 VO；Activation Object, AO，有时也称活动对象、激活对象；Variable Object, VO，有时也称变量对象
+
+  1. 闭包的作用？为什么要有闭包？
+
+     ① 避免变量被污染
+
+     ② 私有化
+
+     ③ 保存变量  常驻内存
+
+  2. 闭包应用场景？
+
+     - 防抖， 节流， 库的封装(保证数据私有化)
+
+  3. 一些闭包实例
+
+     ~~~javascript
+     // 立即执行函数不等同于闭包，闭包的通常写法是return一个函数
+     (function () {
+           let a = 1
+           let b = 2
+     
+           function fn() { console.log(123)}
+           return {
+             fn,
+             a
+           }
+         })()
+     
+     // 例子2
+         let counterFn = function () {
+           let privateCount = 0
+           function changeCount(val) {
+             privateCount += val
+           }
+           return {
+             addCount: function () {
+               changeCount(1)
+             },
+             minusCount: function () {
+               changeCount(-1)
+             },
+             value: function () {
+               return privateCount
+             }
+           }
+         }
+         let fn = counterFn() // 必须先保存这个函数
+         fn.addCount()
+         fn.addCount()
+         fn.addCount()
+         console.log(fn.value()) // 3
+         /*
+         *错误示范  这样改变不了privateCount的值
+           counterFn().addCount()
+           counterFn().addCount()
+         */
+     ~~~
+
+     
+
+- new 操作符做了哪些事？4个
+
+  1. 创建了一个空对象
+
+  2. 设置它的原型链
+
+  3. 改变了this指向
+
+  4. 判断返回值实例
+
+     - 构造器函数默认返回一个对象
+
+  5. 代码解析
+
+     ~~~javascript
+         function Person(){
+           this.name = '张三',
+           this.fn = function(){
+             console.log(`名字叫${this.name}`)
+           }
+         }
+         let p1 = new Person()
+     
+         // new 代码拆分-- 重要
+         let obj = new Object()
+         obj.__proto__ = Person.prototype
+         let res =  Person.call(obj)
+         if(typeof res === 'object'){
+           p1 = res
+         }else{
+           p1 = obj
+         }
+     ~~~
+
+- let a = Object.create(null) 和  let a = {} 有什么区别？
+
+  Object.create(null)是单纯的对象  没有原型继承，在某些场景中运算效率更高
+
