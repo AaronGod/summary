@@ -339,3 +339,14 @@
 
   Object.create(null)是单纯的对象  没有原型继承，在某些场景中运算效率更高
 
+- vue 双向绑定的原理？
+
+  采用 数据劫持+发布订阅模式； 通过 Object.defineProperty()劫持各个属性setter，getter
+
+  数据变动发布消息 ，触发回调
+
+  ![1655870429781](assets/1655870429781.png)
+
+- async 和 await 是什么？有什么作用？
+
+  
