@@ -86,3 +86,148 @@
 
    
 
+9. jquery 的实现代码？分两次优化例子
+
+   - 基础版本
+
+   ~~~javascript
+   (function (window) {
+     window.$ = jquery = function (selector) {
+       // 存放node节点 
+       let nodes = {}
+       if (typeof selector === 'string') {
+         let temp = document.querySelectorAll(selector)
+         for (let i = 0; i < temp.length; i++) {
+           nodes[i] = temp[i]
+         }
+   
+         // 变成类数组
+         nodes.length = temp.length
+       } else {
+         throw new Error('选择器必须为字符串')
+       }
+   
+       nodes.addClass = function (classes) {
+         let classNames = classes.split(' ')
+         classNames.forEach(className => {
+           for (let i = 0; i < nodes.length; i++) {
+             nodes[i].classList.add(className)
+           }
+         })
+       }
+   
+       nodes.text = function (text) {
+         for (let i = 0; i < nodes.length; i++) {
+           nodes[i].textContent = text
+         }
+       }
+       // 返回节点 对象
+       return nodes
+     }
+   })(window)
+   ~~~
+
+   - 优化版1
+
+     ~~~javascript
+     let $ = jQuery = (function (window) {
+       let JQ = function (selector) {
+         this.nodes = document.querySelectorAll(selector)
+       }
+     
+       // 原型方法
+       JQ.prototype = {
+         each: function (callback) {
+           for (let i = 0; i < this.nodes.length; i++) {
+             // 传入第几个， 和node节点
+             callback.call(this, i, this.nodes[i])
+           }
+         },
+         addClass: function (classes) {
+           classes.split(' ').forEach(className => {
+             this.each(function (index, node) {
+               node.classList.add(className)
+             })
+           });
+         },
+         setText: function (text) {
+           this.each(function (index, node) {
+             node.textContent = text
+           })
+         }
+       }
+     
+       // 返回值
+       return function (selector) {
+         return new JQ(selector)
+       }
+     })(window)
+     // 不支持链式调用
+     ~~~
+
+   - 优化2
+
+     ~~~javascript
+     let $ = jQuery = (function (window) {
+       // dom存储
+       function Query (dom, selector) {
+         let i, len = dom ? dom.length : 0
+         for (i = 0; i < len; i++) {
+           this[i] = dom[i]
+         }
+         this.length = len
+         this.selector = selector
+         return this
+       }
+     
+       // 生成jquery对象
+       function Z (elements, selector) {
+         return Query.call(this, elements, selector)
+       }
+     
+       // 具体dom查找
+       function qsa (element, selector) {
+         return element.querySelectorAll(selector)
+       }
+     
+       Z.prototype = {
+         each (callback) {
+           [].every.call(this, function (el, index) {
+             return callback.call(el, index, el) !== false
+           })
+         },
+         // 查找子元素
+         find (selector) {
+           let doms = []
+           this.each(function (index, el) {
+             let childs = this.querySelectorAll(selector)
+             doms.push(...childs)
+           })
+           return new Z(doms, selector)
+         },
+         remove () {
+           this.each(function (index, el) {
+             this.remove()
+           })
+         }
+       }
+     
+       // 全局方法
+       function isFunction (value) {
+         return typeof value === 'function'
+       }
+     
+     
+     
+       // 需要返回的
+       function $ (nodeSelector) {
+         let doms = qsa(document, nodeSelector)
+         return new Z(doms, nodeSelector)
+       }
+       $.isFunction = isFunction
+       return $
+     })(window)
+     ~~~
+
+     
+
