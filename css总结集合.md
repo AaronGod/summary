@@ -140,3 +140,9 @@
 - ul>li:last-child 和 ul>li:last-of-type 的区别？
   1.  last-child 是先找到父元素 ， 找到所有的子元素中最后一个 ，判断是不是LI 是就选中，不是就无效选择器
   2. last-of-type  先找到父元素, 找到所有的类型为LI的元素 ，选中最后一个 
+
+- CSS中用 **opacity、visibility、display** 有什么区别？
+
+1. display:none; 隐藏元素，不占`空间`，会改变页面布局；
+2. opacity:0;隐藏元素占据空间，保持原来的布局；隐藏后绑定的`事件`仍然可被触发；
+3. visibility:hidden;隐藏元素，保持原来的布局；隐藏后绑定的`事件不会被触发`；
