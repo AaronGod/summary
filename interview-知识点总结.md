@@ -1,3 +1,21 @@
+#### CSS篇
+
+- flex 属性, flex-grow  flex-shrink  flex-basis
+
+  - flex: auo === flex: 1 1 auto
+  - flex: initial === flex: 0 1 auto
+  - flex: none === flex: 0 0 auto
+
+  - flex: 1  === flex : 1 1 0
+  - flex:20px === flex-basis:20px
+  - flex: 1 2 === flex-grow:1  flex-shrink:2
+  - flex: 2 10% === flex-grow:2  flex-basis:10%
+  - 拉伸因子和收缩因子，0表示不拉伸或者不收缩，同级元素比较谁大就优先拉伸和收缩谁
+
+
+
+
+
 #### js篇
 
 - undefined 数值转换为 NaN， null 转换为0
