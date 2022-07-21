@@ -109,7 +109,6 @@
      
      ~~~
 
-     
 
 - 数组操作方法中哪些会改变原数组？
 
@@ -123,7 +122,6 @@
 
   首次访问浏览器会将域名解析的IP存入本地中
 
-  
 
 - 从哪些点做性能优化？
 
@@ -185,7 +183,6 @@
     }
   ~~~
 
-  
 
 - vue2中哪些是函数写法，哪些是对象写法？
 
@@ -299,7 +296,6 @@
          */
      ~~~
 
-     
 
 - new 操作符做了哪些事？4个
 
@@ -349,4 +345,19 @@
 
 - async 和 await 是什么？有什么作用？
 
-  
+- vue2 中的this.$emit('update:xx', value) 和 xx.sync 的用法？
+
+  - 写法等价
+
+    ~~~vue
+    <hello-world :message="originStr" @update:message="changeMessage" />
+    <hello-world :message.sync="originStr" />
+
+    <script>
+    	this.$emit('update:message', msgStr)
+    </script>
+    ~~~
+
+  - [vue 中的 .sync 修饰符 与 this.$emit('update:key', value)](https://www.cnblogs.com/aimee2004/p/15776454.html)
+
+  - 对一个 prop 进行“双向绑定”
