@@ -8,7 +8,7 @@
 
   - flex: 1  === flex : 1 1 0
   - flex:20px === flex-basis:20px
-  - flex: 1 2 === flex-grow:1  flex-shrink:1
+  - flex: 1 2 === flex-grow:1  flex-shrink:2
   - flex: 2 10% === flex-grow:2  flex-basis:10%
   - 拉伸因子和收缩因子，0表示不拉伸或者不收缩，同级元素比较谁大就优先拉伸和收缩谁
 
