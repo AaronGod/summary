@@ -370,7 +370,7 @@
     ~~~vue
     <hello-world :message="originStr" @update:message="changeMessage" />
     <hello-world :message.sync="originStr" />
-
+    
     <script>
     	this.$emit('update:message', msgStr)
     </script>
@@ -379,3 +379,149 @@
   - [vue 中的 .sync 修饰符 与 this.$emit('update:key', value)](https://www.cnblogs.com/aimee2004/p/15776454.html)
 
   - 对一个 prop 进行“双向绑定”
+
+- jquery操作checkbox选中中的坑， `使用prop方法设置属性值  而不使用attr方法`
+
+- 移动端最佳适配解决方案? 淘汰rem  选用viewport
+
+  >1vw等于视图单位的1%的宽度
+
+  ><meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+
+  
+
+  ~~~
+  //引入 postcss-px-to-viewport
+   npm install postcss-px-to-viewport --save-dev
+  
+  // 新建 postcss.config.js
+  
+  module.exports = {
+    plugins: {
+      'postcss-px-to-viewport': {
+       unitToConvert: "px", // 要转化的单位       
+       viewportWidth: 375, // UI设计稿的宽度       
+       unitPrecision: 6, // 转换后的精度，即小数点位数       
+       propList: [""], // 指定转换的css属性的单位，代表全部css属性的单位都进行转换     
+       viewportUnit: "vw", // 指定需要转换成的视窗单位，默认vw       
+       fontViewportUnit: "vw", // 指定字体需要转换成的视窗单位，默认vw      selectorBlackList: ["wrap"], // 指定不转换为视窗单位的类名，       
+       minPixelValue: 1, // 默认值1，小于或等于1px则不进行转换       
+       mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false      
+       replace: true, // 是否转换后直接更换属性值       
+       exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配       
+      }
+    }
+  }
+  
+  // 解决第三方组件库兼容问题
+  
+  vant组件库的设计稿是按照375px来开发的。因此在viewportWidth为750px时会出现转换问题。
+  
+    // postcss.config.js
+  const path = require('path');
+  
+  module.exports = ({ webpack }) => {
+    const viewWidth = webpack.resourcePath.includes(path.join('node_modules', 'vant')) ? 375 : 750;
+    return {
+      plugins: {
+        autoprefixer: {},
+        "postcss-px-to-viewport": {
+          unitToConvert: "px",
+          viewportWidth: viewWidth,
+          unitPrecision: 6,
+          propList: ["*"],
+          viewportUnit: "vw",
+          fontViewportUnit: "vw",
+          selectorBlackList: [],
+          minPixelValue: 1,
+          mediaQuery: true,
+          exclude: [],
+          landscape: false
+        }
+      }
+    }
+  }  
+  
+  // 如果读取的node_modules中的文件是vant,那么就将设计稿变为375px。如果读取的文件不是vant的文件,那么就将设计稿变为750px。这样就可以避免vant组件在750px下出现样式缩小的问题了。
+  
+  // 其他的移动端UI组件库 修改这段代码即可
+  
+  const viewWidth = webpack.resourcePath.includes(path.join('node_modules', 'vant')) ? 375 : 750; 
+  ~~~
+
+  
+
+  >//引入 postcss-px-to-viewport
+  > npm install postcss-px-to-viewport --save-dev
+  >
+  >// 新建 postcss.config.js
+  >
+  >module.exports = {
+  >  plugins: {
+  >    'postcss-px-to-viewport': {
+  >     unitToConvert: "px", // 要转化的单位       
+  >     viewportWidth: 375, // UI设计稿的宽度       
+  >     unitPrecision: 6, // 转换后的精度，即小数点位数       
+  >     propList: ["*"], // 指定转换的css属性的单位，*代表全部css属性的单位都进行转换     
+  >     viewportUnit: "vw", // 指定需要转换成的视窗单位，默认vw       
+  >     fontViewportUnit: "vw", // 指定字体需要转换成的视窗单位，默认vw      selectorBlackList: ["wrap"], // 指定不转换为视窗单位的类名，       
+  >     minPixelValue: 1, // 默认值1，小于或等于1px则不进行转换       
+  >     mediaQuery: true, // 是否在媒体查询的css代码中也进行转换，默认false      
+  >     replace: true, // 是否转换后直接更换属性值       
+  >     exclude: [/node_modules/], // 设置忽略文件，用正则做目录名匹配       
+  >    }
+  >  }
+  >}
+  >
+  >// 解决第三方组件库兼容问题
+  >
+  >vant组件库的设计稿是按照375px来开发的。因此在`viewportWidth`为`750px`时会出现转换问题。
+  >
+  >  // postcss.config.js
+  >const path = require('path');
+  >
+  >module.exports = ({ webpack }) => {
+  >  const viewWidth = webpack.resourcePath.includes(path.join('node_modules', 'vant')) ? 375 : 750;
+  >  return {
+  >    plugins: {
+  >      autoprefixer: {},
+  >      "postcss-px-to-viewport": {
+  >        unitToConvert: "px",
+  >        viewportWidth: viewWidth,
+  >        unitPrecision: 6,
+  >        propList: ["*"],
+  >        viewportUnit: "vw",
+  >        fontViewportUnit: "vw",
+  >        selectorBlackList: [],
+  >        minPixelValue: 1,
+  >        mediaQuery: true,
+  >        exclude: [],
+  >        landscape: false
+  >      }
+  >    }
+  >  }
+  >}  
+  >
+  >// 如果读取的`node_modules`中的文件是`vant`,那么就将设计稿变为375px。如果读取的文件不是`vant`的文件,那么就将设计稿变为750px。这样就可以避免`vant`组件在750px下出现样式缩小的问题了。
+  >
+  >// 其他的移动端UI组件库 修改这段代码即可
+  >
+  >const viewWidth = webpack.resourcePath.includes(path.join('node_modules', 'vant')) ? 375 : 750; 
+  >
+  >
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
