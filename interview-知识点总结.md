@@ -520,8 +520,13 @@
 
   
 
-  
+  ## vue 篇
 
-  
+  `router、routes、route的区别`
+  1.router：路由器对象（new的路由器对象），包含一些操作路由的功能函数，来实现编程式导航。一般指的是在任何组件内访问路由。如：路由编程式导航的$router.push()
+
+  2.routes：指创建vue-router路由实例的配置项。用来配置多个route路由对象
+
+  3.route：指路由对象表示当前激活的路由的状态信息。如：this.$route指的是当前路由对象，path/meta/query/params
 
   
