@@ -388,7 +388,6 @@
 
   ><meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 
-  
 
   ~~~
   //引入 postcss-px-to-viewport
@@ -514,7 +513,13 @@
 
   
 
-  
+- 登录业务的相关知识
+
+1. http是无状态的；
+2. 通过cookie在客户端记录状态，通过session在服务端记录状态；
+3. 通过token方式维持状态
+4. 当服务器和客户端不存在跨域时推荐用cookie和session
+5. 存在跨域时用token
 
   
 
