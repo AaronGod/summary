@@ -1,4 +1,4 @@
-#### CSS篇
+CSS篇
 
 - flex 属性, flex-grow  flex-shrink  flex-basis
 
@@ -522,11 +522,229 @@
 
   ## vue 篇
 
-  `router、routes、route的区别`
-  1.router：路由器对象（new的路由器对象），包含一些操作路由的功能函数，来实现编程式导航。一般指的是在任何组件内访问路由。如：路由编程式导航的$router.push()
+  `问题一：   router、routes、route的区别`
+  1.router：路由器对象（new的路由器对象），包含一些操作路由的功能函数，来实现编程式导航。一般指的是在任何组件内访问路由。如：路由编程式导航的$router.push()； $router.go()
 
   2.routes：指创建vue-router路由实例的配置项。用来配置多个route路由对象
 
-  3.route：指路由对象表示当前激活的路由的状态信息。如：this.$route指的是当前路由对象，path/meta/query/params
+  3.route：指路由对象表示当前激活的路由的状态信息。如：this.$route指的是当前路由对象，path/meta/query/params      如： $route.params.id 获取动态路由的id
 
-  
+   
+
+  `问题二： vue-router中 props， query， params传递参数的区别？`
+
+  命名式路由： 使用router-link创建a标签来定义导航链接； to属性为链接地址
+
+   编程式路由： 借助router的实例方法，通过js代码来实现。
+
+  1. params 传递
+
+     - 路由的配置
+
+       第一步： 使用routes参数设置路径
+
+       ~~~js
+       const routes = [
+         // 动态段以冒号开始
+         { path: 'details/:id', name: "details", component: Details },
+       ]
+       ~~~
+
+       第二步：使用router.push()定义路径 ----  path,params 同时存在 ，则params会被忽略
+
+       ~~~js
+       const Home = {
+         template: '<div @click="toDetails">To Details</div>',
+         metheds: {
+           toDetails() {
+             // 字符串路径
+             this.$router.push('/details/001')
+             // 带有路径的对象
+             this.$router.push({path: '/details/001'})
+             // 命名路由，路由配置时，需要 name 字段
+             this.$router.push({ name: 'details', params: { id: '001' } })
+           }
+         }
+       }
+       
+       //  >>>> path,params 同时存在 ，则params会被忽略
+       router.push(path:'/details'. params: {id: '001'}) // 结果只是 /details
+       ~~~
+
+     - 组件中的数据获取 `this.$route.params`
+
+       ~~~js
+       const Details = {
+         template: '<div>Details {{ $route.params.id }} </div>',
+         created() {
+           // 监听路由变化
+           this.$watch(
+             () => this.$route.params,
+             (toParams, previousParams) => {
+               // 对路由变化做出响应...
+             }
+           )
+         },
+       }
+       ~~~
+
+       
+
+  2. query传递  如：/details/001?kind=car
+
+     - 路由配置
+
+       第一步： 使用routes配置路由
+
+       ~~~js
+       const routes = [
+         // 动态段以冒号开始
+         { path: 'details/:id', name: "details", component: Details },
+       ]
+       ~~~
+
+       第二部：使用router.push传递参数
+
+       ~~~js
+       this.$router.push('/details/001?kind=car')
+       this.$router.push({ path: '/details/001', query: { kind: "car" }})
+       this.$router.push({ name: 'details', params: { id: '001' }, query: { kind: 'car' }})
+       ~~~
+
+     - 组件中的数据获取 `this.$route.query`
+
+       ~~~js
+       const Details = {
+         template: '<div>Details {{ $route.query.kind }} </div>',
+         created() {
+           // 监听路由变化
+           this.$watch(
+             () => this.$route.query,
+             (toParams, previousParams) => {
+               // 对路由变化做出响应...
+             }
+           )
+         },
+       }
+       ~~~
+
+  3. hash传递  如： /details/001#car
+
+     - 路由配置
+
+       ~~~js
+       this.$router.push('/details/001#car')
+       this.$router.push({ path: '/details/001', hash: '#car'})
+       this.$router.push({ name: 'details', params: { id: '001' }, hash: 'car'})
+       ~~~
+
+     - 组件中的数据获取  `this.$route.hash.slice(1)`
+
+       ```js
+       const Details = {
+         template: '<div>Details {{ $route.hash.slice(1) }} </div>',
+       }
+       ```
+
+  4. props进行传递
+
+     因为组件中使用$route 会和路由紧密耦合，使用props可以解耦
+
+     第一种： 布尔模式
+
+     - 路由配置
+
+       ```js
+       // 路由配置中，增加 props 字段，并将值 设置为 true
+       const routes = [{ path: '/user/:id', component: User, props: true }]
+       
+       // 当有命名视图的路由，你必须为每个命名视图定义 props 配置：
+       const routes = [
+         {
+           path: '/user/:id',
+           components: { default: User, sidebar: Sidebar },
+           // 为 User 提供 props
+           props: { default: true, sidebar: false }
+         }
+       ]
+       ```
+
+     - 组件中的数据获取
+
+       ```js
+       const User = {
+         props: ['id'], // 组件中通过 props 获取 id
+         template: '<div>User {{ id }}</div>'
+       }
+       ```
+
+     第二种： 对象模式   --- 静态参数时
+
+     - 路由配置
+
+       ````js
+       const routes = [
+         {
+           path: '/hello',
+           component: Hello,
+           props: { name: 'World' }
+         }
+       ]
+       ````
+
+     - 组件中的数据获取
+
+       ```js
+       const Hello = {
+         props: {
+           name: {
+             type: String,
+             default: 'Vue'
+           }
+         },
+         template: '<div> Hello {{ name }}</div>'
+       }
+       ```
+
+     第三种： 函数模式
+
+     可以创建一个返回 props 的函数。这允许你将参数转换为其他类型，将静态值与基于路由的值相结合等等。
+
+     - 路由配置
+
+       ~~~js
+       // 创建一个返回 props 的函数
+       const dynamicPropsFn = (route) => {
+         return { name: route.query.say + "!" , id: route.params.id}
+       }
+       const routes = [
+         {
+           path: '/hello/:id',
+           component: Hello,
+           props: dynamicPropsFn
+         }
+       ]
+       ~~~
+
+       
+
+     - 组件中的数据获取
+
+       ~~~js
+       //当 URL 为 /hello:001?say=World 时， 将传递 {name: 'World!',id:'001'} 作为 props 传给 Hello 组件。
+       const Hello = {
+         props: {
+           name: {
+             type: String,
+             default: 'Vue'
+           },
+             id: String
+         },
+         template: '<div> Hello {{id}} -- {{ name }}</div>'
+       }
+       ~~~
+
+
+
+
+
